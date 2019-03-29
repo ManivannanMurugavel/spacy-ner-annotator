@@ -197,6 +197,6 @@ $( ".classes" ).on("click",".delete_btn",function(){
 		l('deleted');
 		tt = $('.delete_btn').parent().parent().text();
 		class_names.splice(class_names.indexOf(tt),1);
-		$('.delete_btn').parent().parent().remove();
+		$(this).parent().parent().remove();
 	}
 });
