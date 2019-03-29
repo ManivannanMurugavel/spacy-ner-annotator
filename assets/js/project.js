@@ -30,23 +30,28 @@ function onPaste(e){
   if( e.clipboardData ){
     full_text = e.clipboardData.getData('text/plain');
     document.execCommand('insertText', false, full_text);
-    console.log(full_text);
+    l(full_text);
     return false;
   }
   else if( window.clipboardData ){
     full_text = window.clipboardData.getData('Text');
-    console.log(full_text);
+    l(full_text);
     if (window.getSelection)
       window.getSelection().getRangeAt(0).insertNode( document.createTextNode(full_text) );
   }
 }
 // document.querySelector('[contenteditable]').addEventListener('paste', onPaste);
 function setEntityOutput(value,color){
-	console.log(value,color);
+	l(value,color);
 	$("#entity").append('<div class="entityval"><div style="background-color:'+color+'">'+value+'</div></div>');
 }
+function clearSelection()
+{
+ if (window.getSelection) {window.getSelection().removeAllRanges();}
+ else if (document.selection) {document.selection.empty();}
+}
 $(document).ready(function(){
-	console.log('ok');
+	l('ok');
 	$("#edit").hide();
 	$('textarea').attr('readonly',false);
 });
@@ -99,8 +104,8 @@ $( ".classes" ).on("click",".class",function(){
 	}
 	entities.push([iniidx,(iniidx+lgth),$(this).text()]);
 	// alert(window.getSelection().toString());
-	console.log(selected_text)
-	console.log($(this).text());
+	l(selected_text)
+	l($(this).text());
 	color_rgb = $(this).css('background-color');
 	$("#editor").attr('contenteditable',true);
 	if (selection.rangeCount && selection.getRangeAt) {
@@ -121,6 +126,7 @@ $( ".classes" ).on("click",".class",function(){
 	setEntityOutput(selected_text,color_rgb);
 	selected_text = "";
 	$("#editor").attr('contenteditable',false);
+	clearSelection();
 });
 $( "#entity" ).on("dblclick",".entityval",function(){
 	var delete_text = $(this).text();
@@ -141,7 +147,7 @@ $( "#entity" ).on("dblclick",".entityval",function(){
 	if(del_idx != -1){
 		entities.splice(del_idx,1);
 	}
-	console.log(en_del_idx,en_len_cnt,delete_text,color_txt,tag_string); 
+	l(en_del_idx,en_len_cnt,delete_text,color_txt,tag_string); 
 	$(this).remove();
 });
 
@@ -171,7 +177,7 @@ $("#complete").click(function(){
 	if ('Blob' in window) {
 		var fileName = prompt('Please enter file name to save with(.json)', 'Untitled.json');
 		if(fileName != null){
-			console.log(fileName);
+			l(fileName);
 			var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(training_datas));
 			var dlAnchorElem = document.createElement('a');
 			dlAnchorElem.setAttribute("href",     dataStr     );
