@@ -1,5 +1,6 @@
 var full_text_array = []
 var full_text = "";
+var text_file_all_text = [];
 var page_num = 0;
 var selected_text = "";
 var training_datas = [];
@@ -54,6 +55,28 @@ $(document).ready(function(){
 	l('ok');
 	$("#edit").hide();
 	$('textarea').attr('readonly',false);
+	var inputText = prompt('Please enter the training dataset txt file');
+	l(inputText);
+	if(inputText != null){
+		var rawFile = new XMLHttpRequest();
+	    rawFile.open("GET", inputText, false);
+	    rawFile.onreadystatechange = function ()
+	    {
+	        if(rawFile.readyState === 4)
+	        {
+	            if(rawFile.status === 200 || rawFile.status == 0)
+	            {
+	                text_file_all_text = rawFile.responseText.split('\n');
+	    			l(text_file_all_text);
+	    			$('#editor').text(text_file_all_text[page_num]);
+	            }
+	            else{
+	            	alert(inputText+" doest not exist");
+	            }
+	        }
+	    }
+	    rawFile.send(null);
+	}
 });
 $("#save").click(function(){
 	full_text = $("#editor").text();
@@ -168,6 +191,9 @@ $("#next").click(function(){
 	$("#save").show();
 	$("#edit").hide();
 	$("#entity").empty();
+	if(page_num < text_file_all_text.length){
+		$('#editor').text(text_file_all_text[page_num]);
+	}
 });
 $("#complete").click(function(){
 	training_data = {};
