@@ -55,9 +55,21 @@ $(document).ready(function(){
 	l('ok');
 	$("#edit").hide();
 	$('textarea').attr('readonly',false);
-	var inputText = prompt('Please enter the training dataset txt file');
-	l(inputText);
-	if(inputText != null){
+
+
+	var cx = '017643444788069204610:4gvhea_mvga'; // Insert your own Custom Search engine ID here
+	var gcse = document.createElement('script');
+	gcse.type = 'text/javascript';
+	gcse.async = true;
+	gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	var s = document.getElementsByTagName('script')[0];
+	s.parentNode.insertBefore(gcse, s);
+
+
+	var inputText = prompt('Please enter the training dataset(filename.txt)');
+	l("MANI"+inputText+"vannan");
+	if((inputText != null) && (inputText.length > 0)){
+		l(inputText);
 		var rawFile = new XMLHttpRequest();
 	    rawFile.open("GET", inputText, false);
 	    rawFile.onreadystatechange = function ()
@@ -67,8 +79,14 @@ $(document).ready(function(){
 	            if(rawFile.status === 200 || rawFile.status == 0)
 	            {
 	                text_file_all_text = rawFile.responseText.split('\n');
+	                l('success');
 	    			l(text_file_all_text);
 	    			$('#editor').text(text_file_all_text[page_num]);
+	    			setTimeout(function(){ 
+	    				$("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
+	    				$(".gsc-search-button").click();
+	    			}, 500);
+	    			// $("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
 	            }
 	            else{
 	            	alert(inputText+" doest not exist");
@@ -174,6 +192,13 @@ $( "#entity" ).on("dblclick",".entityval",function(){
 	$(this).remove();
 });
 
+$("#skip").click(function(){
+	page_num++;
+	$('#editor').text(text_file_all_text[page_num]);
+	$("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
+	$(".gsc-search-button").click();
+});
+
 $("#next").click(function(){
 	if(entities.length == 0){
 		alert("Please select atleast one entity");
@@ -193,6 +218,8 @@ $("#next").click(function(){
 	$("#entity").empty();
 	if(page_num < text_file_all_text.length){
 		$('#editor').text(text_file_all_text[page_num]);
+		$("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
+		$(".gsc-search-button").click();
 	}
 });
 $("#complete").click(function(){
@@ -209,20 +236,21 @@ $("#complete").click(function(){
 			dlAnchorElem.setAttribute("href",     dataStr     );
 			dlAnchorElem.setAttribute("download", fileName);
 			dlAnchorElem.click();
+			training_datas = []
+			page_num = 0;
+			entities = [];
+			full_text = "";
+			$("#editor").text("");
+			$("#editor").attr('contenteditable',true);
+			$("#save").show();
+			$("#edit").hide();
+			$("#entity").empty();
 		}
 	}
 	else{
 		alert('Your browser does not support the HTML5 Blob.');
 	}
-	training_datas = []
-	page_num = 0;
-	entities = [];
-	full_text = "";
-	$("#editor").text("");
-	$("#editor").attr('contenteditable',true);
-	$("#save").show();
-	$("#edit").hide();
-	$("#entity").empty();
+	
 });
 $( ".classes" ).on("click",".delete_btn",function(){
 	if(confirm("Are you sure want to delete entity name?")){

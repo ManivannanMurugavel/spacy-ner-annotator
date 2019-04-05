@@ -18,7 +18,7 @@
 		}
 		.classes{
 			border: 1px solid;
-			height: 470px;
+			height: 418px;
 			overflow-y: auto;
 		}
 		.pdn{
@@ -41,6 +41,7 @@
 			height: 150px;
 			border: 1px solid;
 			background-color: #444;
+			overflow-y: auto;
 		}
 		.entdiv{
 						
@@ -56,7 +57,7 @@
 		}
 		#editor {
 		    width: 100%;
-		    height: 325px;
+		    height: 280px;
 		    padding: 10px;
 		    background-color: #444;
 		    color: white;
@@ -205,12 +206,18 @@
 						<div class="pdn"><button class="class"><span>Experience</span></button></div> -->
 					</div>
 					<div class="next-content">
+						<button type="button" id="skip" class="btn btn-secondary">Skip</button>
 						<button type="button" id="next" class="btn btn-secondary">Next Content</button>
 						<button type="button" id="complete" class="btn btn-secondary">Complete</button>
 					</div>
 					
 				</div>
 			</div>
+		</div>
+	</div>
+	<div class="col-12">
+		<div class="container">
+			<gcse:search></gcse:search>
 		</div>
 	</div>
 	<script src="assets/js/project.js"></script>
