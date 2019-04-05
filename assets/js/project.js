@@ -57,7 +57,7 @@ $(document).ready(function(){
 	$('textarea').attr('readonly',false);
 
 
-	var cx = '017643444788069204610:4gvhea_mvga'; // Insert your own Custom Search engine ID here
+	var cx = '011558942542564350974:nldba-ydc7g'; // Insert your own Custom Search engine ID here
 	var gcse = document.createElement('script');
 	gcse.type = 'text/javascript';
 	gcse.async = true;
