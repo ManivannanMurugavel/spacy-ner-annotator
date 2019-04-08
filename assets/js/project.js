@@ -55,7 +55,7 @@ $(document).ready(function(){
 	l('ok');
 	$("#edit").hide();
 	$('textarea').attr('readonly',false);
-
+	$("#fileUpload").click()
 
 	var cx = '011558942542564350974:nldba-ydc7g'; // Insert your own Custom Search engine ID here
 	var gcse = document.createElement('script');
@@ -66,35 +66,35 @@ $(document).ready(function(){
 	s.parentNode.insertBefore(gcse, s);
 
 
-	var inputText = prompt('Please enter the training dataset(filename.txt)');
-	l("MANI"+inputText+"vannan");
-	if((inputText != null) && (inputText.length > 0)){
-		l(inputText);
-		var rawFile = new XMLHttpRequest();
-	    rawFile.open("GET", inputText, false);
-	    rawFile.onreadystatechange = function ()
-	    {
-	        if(rawFile.readyState === 4)
-	        {
-	            if(rawFile.status === 200 || rawFile.status == 0)
-	            {
-	                text_file_all_text = rawFile.responseText.split('\n');
-	                l('success');
-	    			l(text_file_all_text);
-	    			$('#editor').text(text_file_all_text[page_num]);
-	    			setTimeout(function(){ 
-	    				$("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
-	    				$(".gsc-search-button").click();
-	    			}, 500);
-	    			// $("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
-	            }
-	            else{
-	            	alert(inputText+" doest not exist");
-	            }
-	        }
-	    }
-	    rawFile.send(null);
-	}
+	// var inputText = prompt('Please enter the training dataset(filename.txt)');
+	// l("MANI"+inputText+"vannan");
+	// if((inputText != null) && (inputText.length > 0)){
+	// 	l(inputText);
+	// 	var rawFile = new XMLHttpRequest();
+	//     rawFile.open("GET", inputText, false);
+	//     rawFile.onreadystatechange = function ()
+	//     {
+	//         if(rawFile.readyState === 4)
+	//         {
+	//             if(rawFile.status === 200 || rawFile.status == 0)
+	//             {
+	//                 text_file_all_text = rawFile.responseText.split('\n');
+	//                 l('success');
+	//     			l(text_file_all_text);
+	//     			$('#editor').text(text_file_all_text[page_num]);
+	//     			setTimeout(function(){ 
+	//     				$("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
+	//     				$(".gsc-search-button").click();
+	//     			}, 500);
+	//     			// $("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
+	//             }
+	//             else{
+	//             	alert(inputText+" doest not exist");
+	//             }
+	//         }
+	//     }
+	//     rawFile.send(null);
+	// }
 });
 $("#save").click(function(){
 	full_text = $("#editor").text();
@@ -258,5 +258,22 @@ $( ".classes" ).on("click",".delete_btn",function(){
 		tt = $('.delete_btn').parent().parent().text();
 		class_names.splice(class_names.indexOf(tt),1);
 		$(this).parent().parent().remove();
+	}
+});
+$("#upload").click(function(){
+	l('upload clicked');
+	var fileInput = $('#validatedCustomFile');
+	var input = fileInput.get(0);
+	if(input.files.length > 0){
+		var textFile = input.files[0];
+		var reader = new FileReader();
+		reader.onload = function(e) {
+		   // The file's text will be printed here
+		    text_file_all_text = e.target.result.split('\n');
+		    $('#editor').text(text_file_all_text[page_num]);
+	    	$("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
+	    	$(".gsc-search-button").click();
+		};
+		reader.readAsText(textFile);
 	}
 });
