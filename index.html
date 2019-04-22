@@ -218,11 +218,11 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-12">
+	<!-- <div class="col-12">
 		<div class="container">
 			<gcse:search></gcse:search>
 		</div>
-	</div>
+	</div> -->
 
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
@@ -236,7 +236,7 @@
 	      <div class="modal-body">
 	        <form class="was-validated">
 	        	<div class="custom-file">
-				    <input type="file" class="custom-file-input" id="validatedCustomFile" accept=".txt" required>
+				    <input type="file" class="custom-file-input" id="validatedCustomFile" onchange="getFilename(this)" accept=".txt" required>
 				    <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
 				    <div class="invalid-feedback">Please upload your training dataset(filename.txt)</div>
 				</div>

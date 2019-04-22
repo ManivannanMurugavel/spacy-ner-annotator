@@ -25,6 +25,23 @@ function myFunction(){
 	}, 0);
 	// alert();
 }
+function getCorrectedText(){
+	if($(".gsc-results.gsc-webResult").children().length > 3){
+		corrected_text = $(".gs-spelling a").first().text();
+		l(corrected_text)
+	}
+}
+function getFilename(myFile){
+	if(myFile.files.length > 0){
+		var file = myFile.files[0];  
+	   	var filename = file.name;
+	   	$(".custom-file-label").text(filename);
+	   	l(filename);
+   }
+   else{
+   		$(".custom-file-label").text('Choose file...');
+   }
+}
 function onPaste(e){
   e.preventDefault();
 
@@ -57,13 +74,13 @@ $(document).ready(function(){
 	$('textarea').attr('readonly',false);
 	$("#fileUpload").click()
 
-	var cx = '011558942542564350974:nldba-ydc7g'; // Insert your own Custom Search engine ID here
-	var gcse = document.createElement('script');
-	gcse.type = 'text/javascript';
-	gcse.async = true;
-	gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
-	var s = document.getElementsByTagName('script')[0];
-	s.parentNode.insertBefore(gcse, s);
+	// var cx = '011558942542564350974:nldba-ydc7g'; // Insert your own Custom Search engine ID here
+	// var gcse = document.createElement('script');
+	// gcse.type = 'text/javascript';
+	// gcse.async = true;
+	// gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	// var s = document.getElementsByTagName('script')[0];
+	// s.parentNode.insertBefore(gcse, s);
 
 
 	// var inputText = prompt('Please enter the training dataset(filename.txt)');
@@ -98,6 +115,10 @@ $(document).ready(function(){
 });
 $("#save").click(function(){
 	full_text = $("#editor").text();
+	if(full_text != $("#gsc-i-id1").val()){
+		$("#gsc-i-id1.gsc-input").val(full_text);
+	    $(".gsc-search-button").click();
+	}
 	$("#editor").attr('contenteditable',false);
 	$("#save").hide();
 	$("#edit").show();
