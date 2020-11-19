@@ -7,6 +7,7 @@ var training_datas = [];
 var training_data = {};
 var entities = [];
 var entities_values = [];
+var entity_count = 0;
 var class_names = []
 function l(message){
 	console.log(message);
@@ -59,14 +60,28 @@ function onPaste(e){
   }
 }
 // document.querySelector('[contenteditable]').addEventListener('paste', onPaste);
-function setEntityOutput(value,color){
-	l(value,color);
-	$("#entity").append('<div class="entityval"><div style="background-color:'+color+'">'+value+'</div></div>');
+function setEntityOutput(value,color, count){
+	console.log(value,color,'setEntityOutput');
+	$("#entity").append('<div class="entityval" data-id="'+count+'"><div style="background-color:'+color+'">'+value+'</div></div>');
 }
 function clearSelection()
 {
  if (window.getSelection) {window.getSelection().removeAllRanges();}
  else if (document.selection) {document.selection.empty();}
+}
+function prepareAnnotations(entities){
+	prepare_html = $("#editor").text()
+	entities = entities.sort((a, b) => (a[0] > b[0] ? -1 : 1))
+	entities.forEach(function(data, val){
+	    // console.log(data, val)
+	    [str_idx, end_idx, cls_name, count, color_rgb] = data
+	    span_html = '<span id="'+count+'" style="background-color:'+color_rgb+';">'+prepare_html.slice(str_idx, end_idx)+'<i class="fa fa-close ent-close"></i></span>';
+	    prepare_html = prepare_html.slice(0, str_idx)+span_html+prepare_html.slice(end_idx, )
+	})
+	// console.log(prepare_html)
+	$("#bk-editor").html(prepare_html)
+	$("#editor").attr('contenteditable',false);
+	$("#bk-editor").attr('contenteditable',false);
 }
 $(document).ready(function(){
 	l('ok');
@@ -114,7 +129,7 @@ $(document).ready(function(){
 	// }
 });
 $("#save").click(function(){
-	full_text = $("#editor").text();
+	full_text = document.getElementById('editor').innerText.replace(/\n/g,' ');
 	if(full_text != $("#gsc-i-id1").val()){
 		$("#gsc-i-id1.gsc-input").val(full_text);
 	    $(".gsc-search-button").click();
@@ -122,6 +137,10 @@ $("#save").click(function(){
 	$("#editor").attr('contenteditable',false);
 	$("#save").hide();
 	$("#edit").show();
+	$("#editor").text(full_text)
+	$("#bk-editor").text(full_text)
+	entities = []
+	prepareAnnotations(entities)
 });
 $("#edit").click(function(){
 	$("#editor").attr('contenteditable',true);
@@ -164,11 +183,16 @@ $( ".classes" ).on("click",".class",function(){
 		alert("Please select entity inside the content");
 		return;
 	}
-	entities.push([iniidx,(iniidx+lgth),$(this).text()]);
+	color_rgb = $(this).css('background-color');
+	var start = selection.anchorOffset;
+	var end = selection.focusOffset;
+	console.log(start, end)
+	setEntityOutput(selected_text,color_rgb, entity_count);
+	entities.push([start,end,$(this).text(), entity_count, color_rgb]);
 	// alert(window.getSelection().toString());
+	prepareAnnotations(entities)
 	l(selected_text)
 	l($(this).text());
-	color_rgb = $(this).css('background-color');
 	$("#editor").attr('contenteditable',true);
 	if (selection.rangeCount && selection.getRangeAt) {
 	    range = selection.getRangeAt(0);
@@ -180,17 +204,18 @@ $( ".classes" ).on("click",".class",function(){
 	  selection.addRange(range);
 	}
 	// Colorize text
-	document.execCommand("BackColor", false, color_rgb);
+	// document.execCommand("BackColor", false, color_rgb);
 	// Set design mode to off
 	document.designMode = "off";
 	entities_values.push(selected_text);
 	entities_values.push(color_rgb);
-	setEntityOutput(selected_text,color_rgb);
 	selected_text = "";
 	$("#editor").attr('contenteditable',false);
 	clearSelection();
+	entity_count++;
 });
 $( "#entity" ).on("dblclick",".entityval",function(){
+	var data_id = $(this).attr('data-id')
 	var delete_text = $(this).text();
 	var e_v_idx = entities_values.indexOf(delete_text);
 	var color_txt = entities_values[e_v_idx+1];
@@ -201,23 +226,56 @@ $( "#entity" ).on("dblclick",".entityval",function(){
 	en_del_idx = full_text.indexOf(delete_text);
 	en_len_cnt = en_del_idx+delete_text.length;
 	del_idx = -1;
+	console.log(entities)
 	$.each(entities,function(idx,val){
-		if((en_del_idx == val[0]) && (en_len_cnt == val[1])){
+		[str_idx, end_idx, cls_name, count, color_rgb] = val
+		if(count == parseInt(data_id)){
+			console.log(idx, count, data_id)
 			del_idx = idx;
 		}
+		// if((en_del_idx == val[0]) && (en_len_cnt == val[1])){
+		// 	del_idx = idx;
+		// }
 	});
 	if(del_idx != -1){
 		entities.splice(del_idx,1);
 	}
+	prepareAnnotations(entities)
 	l(en_del_idx,en_len_cnt,delete_text,color_txt,tag_string); 
 	$(this).remove();
 });
 
+$("#bk-editor").on("click",".ent-close",function(){
+	console.log($(this).parent().attr('id'))
+	var data_id = $(this).parent().attr('id');
+	del_idx = -1;
+	console.log(entities)
+	$.each(entities,function(idx,val){
+		[str_idx, end_idx, cls_name, count, color_rgb] = val
+		if(count == parseInt(data_id)){
+			console.log(idx, count, data_id)
+			del_idx = idx;
+		}
+		// if((en_del_idx == val[0]) && (en_len_cnt == val[1])){
+		// 	del_idx = idx;
+		// }
+	});
+	if(del_idx != -1){
+		entities.splice(del_idx,1);
+	}
+	prepareAnnotations(entities)
+	$("#editor").attr('contenteditable',false);
+	// $(this).remove();
+})
+
 $("#skip").click(function(){
 	page_num++;
 	$('#editor').text(text_file_all_text[page_num]);
+	$('#bk-editor').text(text_file_all_text[page_num]);
 	$("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
 	$(".gsc-search-button").click();
+	entity_count = 0;
+	entities = [];
 });
 
 $("#next").click(function(){
@@ -239,15 +297,22 @@ $("#next").click(function(){
 	$("#entity").empty();
 	if(page_num < text_file_all_text.length){
 		$('#editor').text(text_file_all_text[page_num]);
+		$("#bk-editor").text(text_file_all_text[page_num])
 		$("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
 		$(".gsc-search-button").click();
 	}
+	else{
+		alert("Completed Annotation");
+	}
+	entity_count = 0;
 });
 $("#complete").click(function(){
-	training_data = {};
-	training_data['content'] = full_text;
-	training_data['entities'] = entities;
-	training_datas.push(training_data);
+	if(entities.length > 0){
+		training_data = {};
+		training_data['content'] = full_text;
+		training_data['entities'] = entities;	
+		training_datas.push(training_data);
+	}
 	if ('Blob' in window) {
 		var fileName = prompt('Please enter file name to save with(.json)', 'Untitled.json');
 		if(fileName != null){
@@ -266,6 +331,7 @@ $("#complete").click(function(){
 			$("#save").show();
 			$("#edit").hide();
 			$("#entity").empty();
+			entity_count = 0;
 		}
 	}
 	else{

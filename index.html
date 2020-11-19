@@ -14,12 +14,19 @@
 			text-align: center;
 		}
 		.content,.entity{
-			padding-left: 10%;
+			padding-left: 2%;
 		}
 		.classes{
 			border: 1px solid;
-			height: 335px;
+			height: 600px;
 			overflow-y: auto;
+		}
+		.ent-close{
+			position: absolute;
+		    transform: translate(-50%, -26%);
+		    cursor: pointer;
+		    z-index: 15;
+		    font-size: 13px;
 		}
 		.pdn{
 			padding: 2px 0px;
@@ -56,14 +63,40 @@
 			float: right;
 		}
 		#editor {
-		    width: 100%;
+		    /*width: 100%;
 		    height: 200px;
 		    padding: 10px;
 		    background-color: #444;
 		    color: white;
 		    font-size: 14px;
 		    font-family: monospace;
+		    overflow-y: auto;*/
+		}
+		.editor-div{
+			position: relative;
+			/*padding: 10px;*/
+			width: 100%;
+		    height: 600px;
+		}
+		.back-editor, .front-editor{
+			/*width: 100%;
+		    height: 200px;*/
+		    padding: 10px;
+		    /*background-color: #444;*/
+		    color: white;
+		    font-size: 18px;
+		    font-family: monospace;
 		    overflow-y: auto;
+		    position: absolute;
+		    width: 100%;
+    		height: 100%;
+    		line-height: 35px;
+		}
+		.back-editor{
+			background-color: #000;
+		}
+		.front-editor{
+			background-color: #4440;
 		}
 		.next-content{
 			text-align: center;
@@ -149,6 +182,12 @@
 	    #fileUpload{
 	    	display: none;
 	    }
+	    .btns{
+	    	font-size: 18px;
+		    font-weight: bold;
+		    width: 140px;
+		    padding: 7px 0px;
+	    }
 	</style>
 </head>
 <body>
@@ -169,25 +208,13 @@
 						<button type="button" class="btn btn-primary btn-sm pull-right" id="save">Save</button>
 						<button type="button" class="btn btn-primary btn-sm pull-right" id="edit">Edit</button>
 					</div>
-					
-					
-					<div id="editor" contenteditable="true" onpaste="myFunction()"></div>
 				</div>
-				<div class="row entity">
-					<div class="col-12">
-						<div class="row">
-							<div class="col-6"><h4>Output</h4></div>
-							<div class="col-6">
-								<div class="pull-right note"><span>Double click on text to delete</span></div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="entot" id="entity">
-								<!-- <div class="entityval"><div>March 8, 1992</div></div>
-								<div class="entityval"><div>Manivanann</div></div> -->
-							</div>
-						</div>
+				<div class="row content">
+					<div class="editor-div">
+						<div id="bk-editor" class="back-editor" contenteditable="true" onpaste="myFunction()"></div>
+						<div id="editor" class="front-editor" contenteditable="true" onpaste="myFunction()"></div>
 					</div>
+					
 				</div>
 			</div>
 			<div class="col-4">
@@ -209,9 +236,9 @@
 						<div class="pdn"><button class="class"><span>Experience</span></button></div> -->
 					</div>
 					<div class="next-content">
-						<button type="button" id="skip" class="btn btn-secondary">Skip</button>
-						<button type="button" id="next" class="btn btn-secondary">Next Content</button>
-						<button type="button" id="complete" class="btn btn-secondary">Complete</button>
+						<button type="button" id="skip" class="btns btn btn-secondary">Skip</button>
+						<button type="button" id="next" class="btns btn btn-primary">Next Content</button>
+						<button type="button" id="complete" class="btns btn btn-success">Complete</button>
 					</div>
 					
 				</div>

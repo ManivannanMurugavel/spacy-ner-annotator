@@ -9,7 +9,7 @@ with open(filename) as train_data:
 
 TRAIN_DATA = []
 for data in train:
-	ents = [tuple(entity) for entity in data['entities']]
+    ents = [tuple(entity[:3]) for entity in data['entities']]
 	TRAIN_DATA.append((data['content'],{'entities':ents}))
 
 
