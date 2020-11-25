@@ -270,6 +270,7 @@ $("#bk-editor").on("click",".ent-close",function(){
 
 $("#skip").click(function(){
 	page_num++;
+	$("#page_num").text(page_num+1);
 	$('#editor').text(text_file_all_text[page_num]);
 	$('#bk-editor').text(text_file_all_text[page_num]);
 	$("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
@@ -288,6 +289,7 @@ $("#next").click(function(){
 	training_data['entities'] = entities;
 	training_datas.push(training_data);
 	page_num++;
+	$("#page_num").text(page_num+1);
 	entities = [];
 	full_text = "";
 	$("#editor").text("");
@@ -357,6 +359,8 @@ $("#upload").click(function(){
 		reader.onload = function(e) {
 		   // The file's text will be printed here
 		    text_file_all_text = e.target.result.split('\n');
+		    $("#total_page_num").text(text_file_all_text.length);
+		    $("#page_num").text(page_num+1);
 		    $('#editor').text(text_file_all_text[page_num]);
 	    	$("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
 	    	$(".gsc-search-button").click();
