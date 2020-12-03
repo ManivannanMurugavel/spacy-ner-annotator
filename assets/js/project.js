@@ -89,6 +89,11 @@ $(document).ready(function(){
 	$('textarea').attr('readonly',false);
 	$("#fileUpload").click()
 
+
+    $("#editor").scroll(function() {
+        $("#bk-editor").prop("scrollTop", this.scrollTop).prop("scrollLeft", this.scrollLeft);
+    });
+
 	// var cx = '011558942542564350974:nldba-ydc7g'; // Insert your own Custom Search engine ID here
 	// var gcse = document.createElement('script');
 	// gcse.type = 'text/javascript';
