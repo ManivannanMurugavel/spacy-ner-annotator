@@ -6,7 +6,6 @@ TRAIN_DATA = [('what is the price of polo?', {'entities': [(21, 25, 'PrdName')]}
 
 
 def train_spacy(data,iterations):
-    TRAIN_DATA = data
     nlp = spacy.blank('en')  # create blank Language class
     # create the built-in pipeline components and add them to the pipeline
     # nlp.create_pipe works for built-ins that are registered with spaCy
