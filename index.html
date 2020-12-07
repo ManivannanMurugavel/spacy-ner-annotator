@@ -8,6 +8,20 @@
 	<script src="assets/js/jquery-3.3.1.slim.min.js"></script>
 	<script src="assets/js/popper.min.js"></script>
 	<script src="assets/js/bootstrap.min.js"></script>
+<!-- Warning before closing -->
+	<script>
+		window.onbeforeunload = function (e) {
+			e = e || window.event;
+		
+			// For IE and Firefox prior to version 4
+			if (e) {
+				e.returnValue = 'Sure?';
+			}
+		
+			// For Safari
+			return 'Sure?';
+		};
+		</script>
 	<style type="text/css">
 		.header{
 			width: 100%;
