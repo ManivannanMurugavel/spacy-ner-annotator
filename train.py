@@ -2,7 +2,10 @@ import spacy
 import random
 import time
 import warnings
-from spacy.util import minibatch, compounding
+from spacy.util import minibatch, compounding, decaying
+from spacy.gold import GoldParse
+from spacy.scorer import Scorer
+
 
 # Settings for google Collab
 # spacy.require_gpu()
@@ -16,6 +19,10 @@ from spacy.util import minibatch, compounding
 
 
 TRAIN_DATA = [('what is the price of polo?', {'entities': [(21, 25, 'PrdName')]}), ('what is the price of ball?', {'entities': [(21, 25, 'PrdName')]}), ('what is the price of jegging?', {'entities': [(21, 28, 'PrdName')]}), ('what is the price of t-shirt?', {'entities': [(21, 28, 'PrdName')]}), ('what is the price of jeans?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of bat?', {'entities': [(21, 24, 'PrdName')]}), ('what is the price of shirt?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of bag?', {'entities': [(21, 24, 'PrdName')]}), ('what is the price of cup?', {'entities': [(21, 24, 'PrdName')]}), ('what is the price of jug?', {'entities': [(21, 24, 'PrdName')]}), ('what is the price of plate?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of glass?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of moniter?', {'entities': [(21, 28, 'PrdName')]}), ('what is the price of desktop?', {'entities': [(21, 28, 'PrdName')]}), ('what is the price of bottle?', {'entities': [(21, 27, 'PrdName')]}), ('what is the price of mouse?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of keyboad?', {'entities': [(21, 28, 'PrdName')]}), ('what is the price of chair?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of table?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of watch?', {'entities': [(21, 26, 'PrdName')]})]
+
+
+TEST_DATA =  [('what is the price of polo?', {'entities': [(21, 25, 'PrdName')]}), ('what is the price of ball?', {'entities': [(21, 25, 'PrdName')]}), ('what is the price of jegging?', {'entities': [(21, 28, 'PrdName')]}), ('what is the price of t-shirt?', {'entities': [(21, 28, 'PrdName')]}), ('what is the price of jeans?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of bat?', {'entities': [(21, 24, 'PrdName')]}), ('what is the price of shirt?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of bag?', {'entities': [(21, 24, 'PrdName')]}), ('what is the price of cup?', {'entities': [(21, 24, 'PrdName')]}), ('what is the price of jug?', {'entities': [(21, 24, 'PrdName')]}), ('what is the price of plate?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of glass?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of moniter?', {'entities': [(21, 28, 'PrdName')]}), ('what is the price of desktop?', {'entities': [(21, 28, 'PrdName')]}), ('what is the price of bottle?', {'entities': [(21, 27, 'PrdName')]}), ('what is the price of mouse?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of keyboad?', {'entities': [(21, 28, 'PrdName')]}), ('what is the price of chair?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of table?', {'entities': [(21, 26, 'PrdName')]}), ('what is the price of watch?', {'entities': [(21, 26, 'PrdName')]})]
+
 random.seed(0)
 
 file = open('output_log.txt','w') 
@@ -60,6 +67,7 @@ def train_spacy(data,iterations):
     # get names of other pipes to disable them during training
     pipe_exceptions = ["ner", "trf_wordpiecer", "trf_tok2vec"]
     other_pipes = [pipe for pipe in nlp.pipe_names if pipe != 'ner']
+    dropout = decaying(0.93, 0.64, 1e-6) #minimum, max, decay rate
     with nlp.disable_pipes(*other_pipes):  # only train NER
         
         warnings.filterwarnings("once", category=UserWarning, module='spacy')
@@ -96,6 +104,7 @@ def train_spacy(data,iterations):
                     [text],  # batch of texts
                     [annotations],  # batch of annotations
                     drop=0.2,  # dropout - make it harder to memorise data
+                    # drop=next(dropout),  Incase you are using decaying drop
                     sgd=optimizer,  # callable to update weights
                     losses=losses)
 
@@ -106,6 +115,19 @@ def train_spacy(data,iterations):
             file.close()
 
     return nlp
+
+
+ 
+def evaluate(ner_model, examples):
+    scorer = Scorer()
+    for input_, annot in examples:
+        doc_gold_text = ner_model.make_doc(input_)
+        gold = GoldParse(doc_gold_text, entities=annot['entities'])
+        pred_value = ner_model(input_)
+        scorer.score(pred_value, gold)
+    return scorer.scores
+
+
 
 
 prdnlp = train_spacy(TRAIN_DATA, 20)
@@ -119,3 +141,8 @@ test_text = input("Enter your testing text: ")
 doc = prdnlp(test_text)
 for ent in doc.ents:
     print(ent.text, ent.start_char, ent.end_char, ent.label_)
+
+# Prints f1 score, precision and recall
+results = evaluate(prdnlp, TEST_DATA)
+import json
+print (json.dumps(results,indent=4))
