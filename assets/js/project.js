@@ -133,7 +133,7 @@ $(document).ready(function(){
 	//     rawFile.send(null);
 	// }
 });
-$("#save").click(function(){
+function saveFn(){
 	full_text = document.getElementById('editor').innerText.replace(/\n/g,' ');
 	if(full_text != $("#gsc-i-id1").val()){
 		$("#gsc-i-id1.gsc-input").val(full_text);
@@ -146,6 +146,13 @@ $("#save").click(function(){
 	$("#bk-editor").text(full_text)
 	entities = []
 	prepareAnnotations(entities)
+}
+
+document.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode == 83) {
+        document.getElementById("save").click();
+    }
 });
 $("#edit").click(function(){
 	$("#editor").attr('contenteditable',true);
@@ -170,7 +177,7 @@ $("input").keypress(function(e){
 		return false;  
 	}
 });
-$( ".classes" ).on("click",".class",function(){
+$( ".classes" ).on("click",".class",function addEntity(){
 	entity = [];
 	if($("#editor").attr('contenteditable') == 'true'){
 		alert("Please save the content");
@@ -273,7 +280,7 @@ $("#bk-editor").on("click",".ent-close",function(){
 	// $(this).remove();
 })
 
-$("#skip").click(function(){
+function skipFn(){
 	page_num++;
 	$("#page_num").text(page_num+1);
 	$('#editor').text(text_file_all_text[page_num]);
@@ -282,9 +289,17 @@ $("#skip").click(function(){
 	$(".gsc-search-button").click();
 	entity_count = 0;
 	entities = [];
+}
+
+
+document.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode == 88) {
+        document.getElementById("skip").click();
+    }
 });
 
-$("#next").click(function(){
+function nextFn(){
 	if(entities.length == 0){
 		alert("Please select atleast one entity");
 		return;
@@ -312,8 +327,16 @@ $("#next").click(function(){
 		alert("Completed Annotation");
 	}
 	entity_count = 0;
+}
+
+document.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode == 90) {
+        document.getElementById("next").click();
+    }
 });
-$("#complete").click(function(){
+
+function completeFn(){
 	if(entities.length > 0){
 		training_data = {};
 		training_data['content'] = full_text;
@@ -345,7 +368,15 @@ $("#complete").click(function(){
 		alert('Your browser does not support the HTML5 Blob.');
 	}
 	
+}
+
+document.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode == 81) {
+        document.getElementById("complete").click();
+    }
 });
+
 $( ".classes" ).on("click",".delete_btn",function(){
 	if(confirm("Are you sure want to delete entity name?")){
 		l('deleted');
