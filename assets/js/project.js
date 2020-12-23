@@ -133,27 +133,8 @@ $(document).ready(function(){
 	//     rawFile.send(null);
 	// }
 });
-function saveFn(){
-	full_text = document.getElementById('editor').innerText.replace(/\n/g,' ');
-	if(full_text != $("#gsc-i-id1").val()){
-		$("#gsc-i-id1.gsc-input").val(full_text);
-	    $(".gsc-search-button").click();
-	}
-	$("#editor").attr('contenteditable',false);
-	$("#save").hide();
-	$("#edit").show();
-	$("#editor").text(full_text)
-	$("#bk-editor").text(full_text)
-	entities = []
-	prepareAnnotations(entities)
-}
 
-document.addEventListener("keyup", function(event) {
-    event.preventDefault();
-    if (event.keyCode == 83) {
-        document.getElementById("save").click();
-    }
-});
+
 $("#edit").click(function(){
 	$("#editor").attr('contenteditable',true);
 	$("#edit").hide();
@@ -280,6 +261,50 @@ $("#bk-editor").on("click",".ent-close",function(){
 	// $(this).remove();
 })
 
+
+$( ".classes" ).on("click",".delete_btn",function(){
+	if(confirm("Are you sure want to delete entity name?")){
+		l('deleted');
+		tt = $('.delete_btn').parent().parent().text();
+		class_names.splice(class_names.indexOf(tt),1);
+		$(this).parent().parent().remove();
+	}
+});
+$("#upload").click(function(){
+	l('upload clicked');
+	var fileInput = $('#validatedCustomFile');
+	var input = fileInput.get(0);
+	if(input.files.length > 0){
+		var textFile = input.files[0];
+		var reader = new FileReader();
+		reader.onload = function(e) {
+		   // The file's text will be printed here
+		    text_file_all_text = e.target.result.split('\n');
+		    $("#total_page_num").text(text_file_all_text.length);
+		    $("#page_num").text(page_num+1);
+		    $('#editor').text(text_file_all_text[page_num]);
+	    	$("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
+	    	$(".gsc-search-button").click();
+		};
+		reader.readAsText(textFile);
+	}
+});
+
+function saveFn(){
+	full_text = document.getElementById('editor').innerText.replace(/\n/g,' ');
+	if(full_text != $("#gsc-i-id1").val()){
+		$("#gsc-i-id1.gsc-input").val(full_text);
+	    $(".gsc-search-button").click();
+	}
+	$("#editor").attr('contenteditable',false);
+	$("#save").hide();
+	$("#edit").show();
+	$("#editor").text(full_text)
+	$("#bk-editor").text(full_text)
+	entities = []
+	prepareAnnotations(entities)
+}
+
 function skipFn(){
 	page_num++;
 	$("#page_num").text(page_num+1);
@@ -290,14 +315,6 @@ function skipFn(){
 	entity_count = 0;
 	entities = [];
 }
-
-
-document.addEventListener("keyup", function(event) {
-    event.preventDefault();
-    if (event.keyCode == 88) {
-        document.getElementById("skip").click();
-    }
-});
 
 function nextFn(){
 	if(entities.length == 0){
@@ -328,13 +345,6 @@ function nextFn(){
 	}
 	entity_count = 0;
 }
-
-document.addEventListener("keyup", function(event) {
-    event.preventDefault();
-    if (event.keyCode == 90) {
-        document.getElementById("next").click();
-    }
-});
 
 function completeFn(){
 	if(entities.length > 0){
@@ -370,37 +380,31 @@ function completeFn(){
 	
 }
 
-document.addEventListener("keyup", function(event) {
-    event.preventDefault();
-    if (event.keyCode == 81) {
-        document.getElementById("complete").click();
+// keypress events  
+/* 	cntrl + s = save 
+	cntrl + x = skip
+	cntrl + z = next
+	cntrl + o = complete
+*/
+document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey || event.metaKey) {
+        switch (String.fromCharCode(event.which).toLowerCase()) {
+        case 's':
+            event.preventDefault();
+            document.getElementById("save").click();
+            break;
+        case 'x':
+            event.preventDefault();
+			document.getElementById("skip").click();
+			break;
+        case 'z':
+            event.preventDefault();
+			document.getElementById("next").click();
+			break;
+		case 'o':
+			event.preventDefault();
+			document.getElementById("complete").click();
+			break;
+        }
     }
-});
-
-$( ".classes" ).on("click",".delete_btn",function(){
-	if(confirm("Are you sure want to delete entity name?")){
-		l('deleted');
-		tt = $('.delete_btn').parent().parent().text();
-		class_names.splice(class_names.indexOf(tt),1);
-		$(this).parent().parent().remove();
-	}
-});
-$("#upload").click(function(){
-	l('upload clicked');
-	var fileInput = $('#validatedCustomFile');
-	var input = fileInput.get(0);
-	if(input.files.length > 0){
-		var textFile = input.files[0];
-		var reader = new FileReader();
-		reader.onload = function(e) {
-		   // The file's text will be printed here
-		    text_file_all_text = e.target.result.split('\n');
-		    $("#total_page_num").text(text_file_all_text.length);
-		    $("#page_num").text(page_num+1);
-		    $('#editor').text(text_file_all_text[page_num]);
-	    	$("#gsc-i-id1.gsc-input").val(text_file_all_text[page_num]);
-	    	$(".gsc-search-button").click();
-		};
-		reader.readAsText(textFile);
-	}
 });
