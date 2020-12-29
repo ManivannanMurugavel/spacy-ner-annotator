@@ -95,7 +95,7 @@ def train_spacy(data,iterations):
             start = time.time() # Iteration Time
             
             if(itn%100 == 0):
-                print("Itn  : "+str(itn), time.time()-start_model)
+                print("Itn  : "+str(itn), time.time()-start_training_time)
                 print('Testing')
                
                 results = evaluate(nlp, TEST_DATA)
@@ -108,7 +108,7 @@ def train_spacy(data,iterations):
                 file2.write(str(itn)+','+ str(results['ents_p'])+','+str(results['ents_r'])+','+str(results['ents_f'])+','+str(results["ents_per_type"])+"\n")
                 file2.close()
 
-                modelfile = "drive/MyDrive/training_model/"+str(itn)
+                modelfile = "training_model"+str(itn)
                 nlp.to_disk(modelfile)
   
             # Reducing Learning rate after certain operations 
@@ -168,7 +168,7 @@ prdnlp = train_spacy(TRAIN_DATA, 500)
 
 # uncomment if you want to put model name through command line
 # modelfile = input("Enter your Model Name: ")
-modelfile = "drive/MyDrive/Final_model"
+modelfile = "Final_model"
 prdnlp.to_disk(modelfile)
 
 #Test your text
