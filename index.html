@@ -200,8 +200,8 @@
 	</div>
 	<div class="col-12">
 		<div class="row">
-			<div class="col-8">
-				<div class="row content">
+			<div class="col-8" >
+				<div class="row content" >
 					<div class="col-3" style="padding: 0px;"><h4>Content</h4></div>
 					<div class="col-6 note">
 						<span>Please save it, Once pasted or typed</span>
@@ -211,7 +211,7 @@
 						/
 						<button type="button" class="btn btn-secondary btn-sm" id="total_page_num"></button>
 
-						<button type="button" class="btn btn-primary btn-sm pull-right" id="save">Save</button>
+						<button type="button" class="btn btn-primary btn-sm pull-right" id="save" onclick="saveFn();">Save</button>
 						<button type="button" class="btn btn-primary btn-sm pull-right" id="edit">Edit</button>
 					</div>
 				</div>
@@ -242,9 +242,9 @@
 						<div class="pdn"><button class="class"><span>Experience</span></button></div> -->
 					</div>
 					<div class="next-content">
-						<button type="button" id="skip" class="btns btn btn-secondary">Skip</button>
-						<button type="button" id="next" class="btns btn btn-primary">Next Content</button>
-						<button type="button" id="complete" class="btns btn btn-success">Complete</button>
+						<button type="button" id="skip" class="btns btn btn-secondary" onclick="skipFn();">Skip</button>
+						<button type="button" id="next" class="btns btn btn-primary" onclick="nextFn();">Next Content</button>
+						<button type="button" id="complete" class="btns btn btn-success" onclick="completeFn();">Complete</button>
 					</div>
 					
 				</div>
