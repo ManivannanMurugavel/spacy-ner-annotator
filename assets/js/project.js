@@ -387,7 +387,7 @@ function completeFn(){
 	cntrl + o = complete
 */
 document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey || event.metaKey) {
+    if (event.altKey || event.metaKey) {
         switch (String.fromCharCode(event.which).toLowerCase()) {
         case 's':
             event.preventDefault();
