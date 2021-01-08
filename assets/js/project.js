@@ -395,16 +395,16 @@ document.addEventListener('keydown', function(event) {
             break;
         case 'x':
             event.preventDefault();
-			document.getElementById("skip").click();
-			break;
+	    document.getElementById("skip").click();
+	    break;
         case 'z':
             event.preventDefault();
-			document.getElementById("next").click();
-			break;
-		case 'o':
-			event.preventDefault();
-			document.getElementById("complete").click();
-			break;
+	    document.getElementById("next").click();
+	    break;
+	case 'o':
+	    event.preventDefault();
+	    document.getElementById("complete").click();
+	    break;
         }
     }
 });
