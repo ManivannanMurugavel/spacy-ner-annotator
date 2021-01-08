@@ -381,15 +381,15 @@ function completeFn(){
 }
 
 // keypress events  
-/* 	cntrl + s = save 
-	cntrl + x = skip
-	cntrl + z = next
-	cntrl + o = complete
+/* 	alt + g = save 
+	alt + x = skip
+	alt + z = next
+	alt + o = complete
 */
 document.addEventListener('keydown', function(event) {
     if (event.altKey || event.metaKey) {
         switch (String.fromCharCode(event.which).toLowerCase()) {
-        case 's':
+        case 'g':
             event.preventDefault();
             document.getElementById("save").click();
             break;
